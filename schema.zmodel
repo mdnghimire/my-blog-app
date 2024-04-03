@@ -1,6 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+plugin hooks {
+  provider = '@zenstackhq/tanstack-query'
+  target = 'react'
+  version = 'v5'
+  output = "./src/lib/hooks"
+}
+
 generator client {
     provider = "prisma-client-js"
 }
@@ -15,15 +22,22 @@ datasource db {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id Int @id @default(autoincrement())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean @default(false)
 
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
+  createdBy User @relation(fields: [createdById], references: [id])
+  createdById String
 
-    @@index([name])
+  @@index([name])
+
+  // author has full access
+  @@allow('all', auth() == createdBy)
+
+  // logged-in users can view published posts
+  @@allow('read', auth() != null && published)
 }
 
 // Necessary for Next auth
