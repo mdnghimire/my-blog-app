@@ -13,14 +13,22 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
-
+plugin openapi {
+    provider = '@zenstackhq/openapi'
+    output = './openapi.yaml'
+    title = 'My awesome API'
+    version = '0.5.0'
+    summary = 'Created with ZenStack'
+    description = 'My awesome API created with ZenStack'
+    prefix = '/api'
+}
 model Post {
   id Int @id @default(autoincrement())
   name String
@@ -83,6 +91,12 @@ model User {
 
     // only the user can update or delete their own profile
     @@allow('update, delete', auth() == this)
+
+
+    @@openapi.meta({
+        security: [ { basic: [] } ],
+        tagDescription: 'Operations for managing users',
+    })
 }
 
 model VerificationToken {

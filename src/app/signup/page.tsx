@@ -2,6 +2,7 @@
 
 import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { useCreateUser } from "~/lib/hooks";
@@ -36,41 +37,50 @@ const Signup: NextPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-      <h1 className="text-5xl font-extrabold text-white">Sign up</h1>
-      <form
-        className="mt-16 flex flex-col gap-8 text-2xl"
-        onSubmit={(e) => void onSignup(e)}
-      >
-        <div>
-          <label htmlFor="email" className="inline-block w-32 text-white">
-            Email
-          </label>
+      <div className="rounded border border-white p-8 ">
+        <h1 className="text-center text-5xl font-extrabold text-white">
+          Sign up
+        </h1>
+        <form
+          className="mt-16 flex flex-col gap-8 text-2xl "
+          onSubmit={(e) => void onSignup(e)}
+        >
+          <div>
+            <label htmlFor="email" className="inline-block w-32 text-white">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              className="ml-4 w-72 rounded border p-2"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="inline-block w-32 text-white ">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              className="ml-4 w-72 rounded border p-2"
+            />
+          </div>
           <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-            className="ml-4 w-72 rounded border p-2"
+            type="submit"
+            value="Create account"
+            className="cursor-pointer rounded border border-gray-500 py-4 text-white"
           />
+        </form>
+        <div className="mt-4 text-center">
+          <Link className="text-white" href="/signin">
+            {"Already have an account?"}
+          </Link>
         </div>
-        <div>
-          <label htmlFor="password" className="inline-block w-32 text-white ">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            className="ml-4 w-72 rounded border p-2"
-          />
-        </div>
-        <input
-          type="submit"
-          value="Create account"
-          className="cursor-pointer rounded border border-gray-500 py-4 text-white"
-        />
-      </form>
+      </div>
     </div>
   );
 };
